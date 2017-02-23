@@ -1,0 +1,301 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		6AC521FB1E5EB1B500E16DD2 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AC521FA1E5EB1B500E16DD2 /* main.swift */; };
+		6AC522051E5EB5A000E16DD2 /* CommandLine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AC522021E5EB53900E16DD2 /* CommandLine.swift */; };
+		6AC522061E5EB5A000E16DD2 /* Option.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AC522031E5EB53900E16DD2 /* Option.swift */; };
+		6AC522071E5EB5A000E16DD2 /* StringExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AC522041E5EB53900E16DD2 /* StringExtensions.swift */; };
+		6AC5220B1E5EBC4A00E16DD2 /* MovieCutter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6AC5220A1E5EBC4A00E16DD2 /* MovieCutter.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		6AC521F51E5EB1B500E16DD2 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		6AC521F71E5EB1B500E16DD2 /* MovieCutter */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = MovieCutter; sourceTree = BUILT_PRODUCTS_DIR; };
+		6AC521FA1E5EB1B500E16DD2 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		6AC522021E5EB53900E16DD2 /* CommandLine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CommandLine.swift; sourceTree = "<group>"; };
+		6AC522031E5EB53900E16DD2 /* Option.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Option.swift; sourceTree = "<group>"; };
+		6AC522041E5EB53900E16DD2 /* StringExtensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringExtensions.swift; sourceTree = "<group>"; };
+		6AC5220A1E5EBC4A00E16DD2 /* MovieCutter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MovieCutter.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		6AC521F41E5EB1B500E16DD2 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		6AC521EE1E5EB1B500E16DD2 = {
+			isa = PBXGroup;
+			children = (
+				6AC521F91E5EB1B500E16DD2 /* MovieCutter */,
+				6AC521F81E5EB1B500E16DD2 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		6AC521F81E5EB1B500E16DD2 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				6AC521F71E5EB1B500E16DD2 /* MovieCutter */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		6AC521F91E5EB1B500E16DD2 /* MovieCutter */ = {
+			isa = PBXGroup;
+			children = (
+				6AC522011E5EB53900E16DD2 /* CommandLineKit */,
+				6AC521FA1E5EB1B500E16DD2 /* main.swift */,
+				6AC5220A1E5EBC4A00E16DD2 /* MovieCutter.swift */,
+			);
+			path = MovieCutter;
+			sourceTree = "<group>";
+		};
+		6AC522011E5EB53900E16DD2 /* CommandLineKit */ = {
+			isa = PBXGroup;
+			children = (
+				6AC522021E5EB53900E16DD2 /* CommandLine.swift */,
+				6AC522031E5EB53900E16DD2 /* Option.swift */,
+				6AC522041E5EB53900E16DD2 /* StringExtensions.swift */,
+			);
+			path = CommandLineKit;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		6AC521F61E5EB1B500E16DD2 /* MovieCutter */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 6AC521FE1E5EB1B500E16DD2 /* Build configuration list for PBXNativeTarget "MovieCutter" */;
+			buildPhases = (
+				6AC521F31E5EB1B500E16DD2 /* Sources */,
+				6AC521F41E5EB1B500E16DD2 /* Frameworks */,
+				6AC521F51E5EB1B500E16DD2 /* CopyFiles */,
+				6AC5220C1E5EC71C00E16DD2 /* ShellScript */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MovieCutter;
+			productName = MovieCutter;
+			productReference = 6AC521F71E5EB1B500E16DD2 /* MovieCutter */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		6AC521EF1E5EB1B500E16DD2 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 0820;
+				LastUpgradeCheck = 0820;
+				ORGANIZATIONNAME = Amap;
+				TargetAttributes = {
+					6AC521F61E5EB1B500E16DD2 = {
+						CreatedOnToolsVersion = 8.2.1;
+						DevelopmentTeam = EWQX23P267;
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 6AC521F21E5EB1B500E16DD2 /* Build configuration list for PBXProject "MovieCutter" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 6AC521EE1E5EB1B500E16DD2;
+			productRefGroup = 6AC521F81E5EB1B500E16DD2 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				6AC521F61E5EB1B500E16DD2 /* MovieCutter */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		6AC5220C1E5EC71C00E16DD2 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "${PROJECT_DIR}/Build/Products/Debug/MovieCutter -i /Users/hanxiaoming/Desktop/Result/iOS-location-rotation-effect.mp4 -o /Users/hanxiaoming/Desktop/Result/aaaa.mp4 -s -1 -d 8";
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		6AC521F31E5EB1B500E16DD2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6AC522071E5EB5A000E16DD2 /* StringExtensions.swift in Sources */,
+				6AC521FB1E5EB1B500E16DD2 /* main.swift in Sources */,
+				6AC522061E5EB5A000E16DD2 /* Option.swift in Sources */,
+				6AC522051E5EB5A000E16DD2 /* CommandLine.swift in Sources */,
+				6AC5220B1E5EBC4A00E16DD2 /* MovieCutter.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		6AC521FC1E5EB1B500E16DD2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		6AC521FD1E5EB1B500E16DD2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		6AC521FF1E5EB1B500E16DD2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEVELOPMENT_TEAM = EWQX23P267;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+			};
+			name = Debug;
+		};
+		6AC522001E5EB1B500E16DD2 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				DEVELOPMENT_TEAM = EWQX23P267;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		6AC521F21E5EB1B500E16DD2 /* Build configuration list for PBXProject "MovieCutter" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6AC521FC1E5EB1B500E16DD2 /* Debug */,
+				6AC521FD1E5EB1B500E16DD2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		6AC521FE1E5EB1B500E16DD2 /* Build configuration list for PBXNativeTarget "MovieCutter" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6AC521FF1E5EB1B500E16DD2 /* Debug */,
+				6AC522001E5EB1B500E16DD2 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 6AC521EF1E5EB1B500E16DD2 /* Project object */;
+}
