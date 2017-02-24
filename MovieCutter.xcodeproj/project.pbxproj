@@ -149,7 +149,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "${PROJECT_DIR}/Build/Products/Debug/MovieCutter -i /Users/hanxiaoming/Desktop/Result/iOS-location-rotation-effect.mp4 -o /Users/hanxiaoming/Desktop/Result/aaaa.mp4 -s -1 -d 8";
+			shellScript = "";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -294,6 +294,7 @@
 				6AC522001E5EB1B500E16DD2 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
