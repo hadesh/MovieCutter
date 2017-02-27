@@ -60,6 +60,11 @@ class MovieCutter {
         }
         
         var modifiedDuration = durationTime
+        
+        if modifiedDuration < 0.0 {
+            modifiedDuration = self.movieLength()
+        }
+        
         if modifiedStart + modifiedDuration > self.movieLength() {
             modifiedDuration = self.movieLength() - modifiedStart
         }

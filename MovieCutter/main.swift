@@ -10,19 +10,19 @@ import Foundation
 
 let cli = CommandLine()
 
-let inFile = StringOption(shortFlag: "i", longFlag: "input",
-                         helpMessage: "input movie path")
-let outFile = StringOption(shortFlag: "o", longFlag: "output",
-                         helpMessage: "output movie path")
+let inFile = StringOption(shortFlag: "i", longFlag: "input", required: true,
+                         helpMessage: "input movie path.")
+let outFile = StringOption(shortFlag: "o", longFlag: "output", required: true,
+                         helpMessage: "output movie path.")
 let startTime = DoubleOption(shortFlag: "s", longFlag: "starttime", required: false,
-                          helpMessage: "star time in seconds, if the value is less than 0, then calculate duration form the end")
+                          helpMessage: "star time in seconds, if the value is less than 0, then calculate duration form the end.")
 let durationTime = DoubleOption(shortFlag: "d", longFlag: "duration", required: false,
-                          helpMessage: "duration time in seconds")
+                          helpMessage: "duration time in seconds. negative value for the entire duration.")
 
-let cropWidth = DoubleOption(shortFlag: "w", longFlag: "width", required: false,
-                             helpMessage: "crop width")
-let cropHeight = DoubleOption(shortFlag: "h", longFlag: "height", required: false,
-                                helpMessage: "crop height")
+let cropWidth = DoubleOption(shortFlag: "W", longFlag: "width", required: false,
+                             helpMessage: "crop width. default is 512.")
+let cropHeight = DoubleOption(shortFlag: "H", longFlag: "height", required: false,
+                                helpMessage: "crop height. default is 920.")
 
 let compressRatio = DoubleOption(shortFlag: "r", longFlag: "ratio", required: false,
                               helpMessage: "compress ration, [0,1], default is 0.475")
@@ -30,12 +30,17 @@ let compressRatio = DoubleOption(shortFlag: "r", longFlag: "ratio", required: fa
 let help = BoolOption(shortFlag: "h", longFlag: "help",
                       helpMessage: "Prints a help message.")
 
-cli.addOptions(inFile, outFile, startTime, durationTime, help)
+cli.addOptions(inFile, outFile, startTime, durationTime, cropWidth, cropHeight, compressRatio, help)
 
 do {
     try cli.parse()
 } catch {
     cli.printUsage(error)
+    exit(EX_USAGE)
+}
+
+if help.value {
+    cli.printUsage()
     exit(EX_USAGE)
 }
 
