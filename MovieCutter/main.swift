@@ -24,8 +24,8 @@ let cropWidth = DoubleOption(shortFlag: "w", longFlag: "width", required: false,
 let cropHeight = DoubleOption(shortFlag: "h", longFlag: "height", required: false,
                                 helpMessage: "crop height")
 
-let fps = IntOption(shortFlag: "f", longFlag: "fps", required: false,
-                              helpMessage: "fps, default is 30")
+let compressRatio = DoubleOption(shortFlag: "r", longFlag: "ratio", required: false,
+                              helpMessage: "compress ration, [0,1], default is 0.475")
 
 let help = BoolOption(shortFlag: "h", longFlag: "help",
                       helpMessage: "Prints a help message.")
@@ -54,12 +54,12 @@ if output == nil {
 var start = startTime.value
 
 if start == nil {
-    start = 10
+    start = -1
 }
 var duration = durationTime.value
 
 if duration == nil {
-    duration = 20
+    duration = 34
 }
 
 var width = cropWidth.value
@@ -73,16 +73,21 @@ if height == nil {
     height = 920
 }
 
-var f = fps.value
+var ratio = compressRatio.value
 
-if f == nil {
-    f = 10
+if ratio == nil {
+    ratio = 0.45
 }
 
 
 let movieCutter = MovieCutter(input)
 
-print("movieLength is \(movieCutter.movieLength())")
+print("**********")
+print("name is \(URL(fileURLWithPath: input!).lastPathComponent)")
+print("lenght is \(movieCutter.movieLength())")
+print("size is \(width!)*\(height!)")
+print("ratio is \(ratio!)")
+print("**********")
 
 let sema = DispatchSemaphore(value: 0)
 
@@ -90,12 +95,18 @@ var processFinished = false
 
 // 先trim后crop
 movieCutter.trimMovie(startTime: start!, durationTime: duration!)
-movieCutter.cropMovie(width: width!, height: height!, fps: f!)
-
-movieCutter.exportMovie(output: output!) { (finished) in
-    processFinished = finished
-    sema.signal()
+movieCutter.exportMovieWithCompression(output: output!, width: width!, height: height!, compressRatio: ratio!) { (finished) in
+        processFinished = finished
+        sema.signal()
 }
+
+//movieCutter.trimMovie(startTime: start!, durationTime: duration!)
+//movieCutter.cropMovie(width: width!, height: height!, fps: 15)
+//
+//movieCutter.exportMovie(output: output!) { (finished) in
+//    processFinished = finished
+//    sema.signal()
+//}
 
 sema.wait();
 

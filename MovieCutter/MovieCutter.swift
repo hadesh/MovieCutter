@@ -8,10 +8,12 @@
 
 import Foundation
 import AVFoundation
+import VideoToolbox
 
 class MovieCutter {
     var inputFile: String?
     var asset: AVAsset?
+    let dispatchQueue: DispatchQueue!
     
     var videoComposition: AVMutableVideoComposition?
     var composition: AVMutableComposition?
@@ -22,6 +24,8 @@ class MovieCutter {
         if (inputFile != nil) {
             self.asset = AVAsset(url: URL(fileURLWithPath: inputFile!))
         }
+        dispatchQueue = DispatchQueue(label: "com.hades.writequeue")
+        
     }
     
     func movieLength() -> Double {
@@ -39,7 +43,7 @@ class MovieCutter {
             return
         }
         
-        print("start triming...")
+        print("start trimming...")
         
         let assetVideoTrack = asset!.tracks(withMediaType: AVMediaTypeVideo).first;
         let assetAudioTrack = asset!.tracks(withMediaType: AVMediaTypeAudio).first;
@@ -51,13 +55,19 @@ class MovieCutter {
             modifiedStart = self.movieLength() - durationTime
         }
         
+        if modifiedStart < 0.0 {
+            modifiedStart = 0.0
+        }
+        
         var modifiedDuration = durationTime
         if modifiedStart + modifiedDuration > self.movieLength() {
             modifiedDuration = self.movieLength() - modifiedStart
         }
 
-        let start = CMTimeMakeWithSeconds(modifiedStart, 1)
-        let dutation = CMTimeMakeWithSeconds(modifiedDuration, 1)
+        let scale = asset!.duration.timescale
+        
+        let start = CMTimeMakeWithSeconds(modifiedStart, scale)
+        let dutation = CMTimeMakeWithSeconds(modifiedDuration, scale)
         let timeRange = CMTimeRange(start: start, duration: dutation)
         
         
@@ -70,7 +80,7 @@ class MovieCutter {
                     try compositionVideoTrack.insertTimeRange(timeRange, of: assetVideoTrack!, at: kCMTimeZero)
                 }
                 catch {
-                    print("error :\(error)")
+                    print("add video track error :\(error)")
                 }
             }
             if assetAudioTrack != nil {
@@ -80,7 +90,7 @@ class MovieCutter {
                     try compositionAudioTrack.insertTimeRange(timeRange, of: assetAudioTrack!, at: kCMTimeZero)
                 }
                 catch {
-                    print("error :\(error)")
+                    print("add audio track error :\(error)")
                 }
             }
         }
@@ -91,8 +101,8 @@ class MovieCutter {
             // 尾部有剩余
             if modifiedStart + modifiedDuration < self.movieLength() {
                 
-                let endStart = CMTimeMakeWithSeconds(modifiedDuration, 1)
-                let endDuration = CMTimeMakeWithSeconds(self.movieLength() - modifiedStart - modifiedDuration, 1)
+                let endStart = CMTimeMakeWithSeconds(modifiedDuration, scale)
+                let endDuration = CMTimeMakeWithSeconds((self.movieLength() - modifiedStart - modifiedDuration), scale)
                 self.composition!.removeTimeRange(CMTimeRangeMake(endStart, endDuration))
             }
         }
@@ -228,5 +238,169 @@ class MovieCutter {
             }
         }
 
+    }
+    
+    func exportMovieWithCompression(output: String!, width: Double, height: Double, compressRatio: Double, completionHandler: @escaping (Bool) -> Void) {
+        
+        print("start exporting...")
+        
+        let assetVideoTrack = asset!.tracks(withMediaType: AVMediaTypeVideo).first;
+        let assetAudioTrack = asset!.tracks(withMediaType: AVMediaTypeAudio).first;
+        
+        let timeRange = CMTimeRange(start: kCMTimeZero, duration: asset!.duration)
+        
+        if self.composition == nil {
+            self.composition = AVMutableComposition()
+            if assetVideoTrack != nil {
+                let compositionVideoTrack = composition!.addMutableTrack(withMediaType:AVMediaTypeVideo, preferredTrackID: kCMPersistentTrackID_Invalid)
+                
+                do {
+                    try compositionVideoTrack.insertTimeRange(timeRange, of: assetVideoTrack!, at: kCMTimeZero)
+                }
+                catch {
+                    print("add video track error :\(error)")
+                }
+            }
+            if assetAudioTrack != nil {
+                let compositionAudioTrack = composition!.addMutableTrack(withMediaType:AVMediaTypeAudio, preferredTrackID: kCMPersistentTrackID_Invalid)
+                
+                do {
+                    try compositionAudioTrack.insertTimeRange(timeRange, of: assetAudioTrack!, at: kCMTimeZero)
+                }
+                catch {
+                    print("add audio track error :\(error)")
+                }
+            }
+        }
+
+        if self.composition?.tracks.count == 0 {
+            print("there is no track, invalid asset: \(asset!)")
+            completionHandler(false)
+            return
+        }
+        
+        let manager = FileManager.default
+        
+        let outPath = URL(fileURLWithPath: output!)
+        //Remove existing file
+        _ = try? manager.removeItem(at: outPath)
+        
+        // writer
+        let assetWriter = try? AVAssetWriter(url: outPath, fileType: AVFileTypeMPEG4)
+        
+        let naturalSize = self.composition!.naturalSize
+        let targetSize = CGSize(width: width, height: height)
+        
+        var bitrate = naturalSize.width * naturalSize.height * CGFloat(compressRatio)
+        
+        if bitrate <= 0.0 {
+            bitrate = 1.0
+        }
+        
+//        let keyFrameInterval: Int = 30
+        let videoSettings = [AVVideoCodecKey: AVVideoCodecH264,
+                             AVVideoWidthKey: targetSize.width,
+                             AVVideoHeightKey: targetSize.height,
+                             AVVideoCompressionPropertiesKey:
+                                [//AVVideoMaxKeyFrameIntervalKey: keyFrameInterval,
+                                 AVVideoAverageBitRateKey: bitrate,
+                                 AVVideoProfileLevelKey: AVVideoProfileLevelH264Main31]
+            ] as [String : Any]
+        
+        let videoWriterInput = AVAssetWriterInput(mediaType: AVMediaTypeVideo, outputSettings: videoSettings)
+        
+        if assetWriter!.canAdd(videoWriterInput) {
+            assetWriter!.add(videoWriterInput)
+            
+            // reader
+            let assetReader = try? AVAssetReader(asset: composition!)
+            
+            let readerSetting: [String : Any] = [kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_32ARGB]
+            
+            // add video output
+            let videoAssetTrackOutput = AVAssetReaderTrackOutput(track: composition!.tracks(withMediaType: AVMediaTypeVideo).first!, outputSettings: readerSetting)
+            videoAssetTrackOutput.alwaysCopiesSampleData = false
+            
+            if assetReader!.canAdd(videoAssetTrackOutput) {
+                assetReader!.add(videoAssetTrackOutput)
+                
+                if assetAudioTrack != nil {
+                    // add audio output
+                    let audioAssetTrackOutput = AVAssetReaderTrackOutput(track: assetAudioTrack!, outputSettings: nil)
+                    audioAssetTrackOutput.alwaysCopiesSampleData = false
+                    
+                    if assetReader!.canAdd(audioAssetTrackOutput) {
+                        assetReader!.add(audioAssetTrackOutput)
+                    }
+                } // end assetAudio
+                
+                
+                assetWriter!.startWriting()
+                assetWriter!.startSession(atSourceTime: kCMTimeZero)
+                
+                if assetReader!.startReading() {
+
+                    let encodingGroup = DispatchGroup()
+                    encodingGroup.enter()
+                    
+                    let fps: Double = 15.0
+                    
+                    var i = 0
+                    let frameRate: Double = 60.0 / fps
+                    
+                    videoWriterInput.requestMediaDataWhenReady(on: dispatchQueue, using: {
+                        
+                        while videoWriterInput.isReadyForMoreMediaData {
+                            let nextSampleBuffer: CMSampleBuffer? = videoAssetTrackOutput.copyNextSampleBuffer()
+                            if nextSampleBuffer != nil {
+                                
+                                var count: CMItemCount = 0
+                                
+                                
+                                let value = Double(i) / frameRate
+                                i = i+1
+                                
+                                if i % Int(frameRate) == 0 {
+                                    
+                                    let newTimeStamp: CMTime = CMTimeMake(Int64(value), Int32(fps))
+                                    
+                                    CMSampleBufferGetSampleTimingInfoArray(nextSampleBuffer!, 0, nil, &count);
+                                    var info = [CMSampleTimingInfo](repeating: CMSampleTimingInfo(duration: CMTimeMake(0, 0), presentationTimeStamp: CMTimeMake(0, 0), decodeTimeStamp: CMTimeMake(0, 0)), count: count)
+                                    CMSampleBufferGetSampleTimingInfoArray(nextSampleBuffer!, count, &info, &count);
+                                    
+                                    for i in 0..<count {
+                                        
+                                        info[i].decodeTimeStamp = kCMTimeInvalid
+                                        info[i].presentationTimeStamp = newTimeStamp
+                                    }
+                                    
+                                    var outBuffer: CMSampleBuffer?
+                                    CMSampleBufferCreateCopyWithNewTiming(nil, nextSampleBuffer!, count, &info, &outBuffer)
+                                    videoWriterInput.append(outBuffer!)
+                                }
+
+                                // append buffer without change fps
+//                                videoWriterInput.append(nextSampleBuffer!)
+                             
+                            }
+                            else {
+                             
+                                videoWriterInput.markAsFinished()
+                                encodingGroup.leave()
+                                break
+                            }
+                        } //end while
+                    })
+                    
+                    _ = encodingGroup.wait(timeout: DispatchTime.distantFuture)
+                } // end start reading
+                
+            }
+        }
+        
+        assetWriter!.finishWriting {
+
+            completionHandler(true)
+        }
     }
 }
