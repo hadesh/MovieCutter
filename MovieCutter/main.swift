@@ -25,7 +25,7 @@ let cropHeight = DoubleOption(shortFlag: "H", longFlag: "height", required: fals
                                 helpMessage: "crop height. default is 920.")
 
 let compressRatio = DoubleOption(shortFlag: "r", longFlag: "ratio", required: false,
-                              helpMessage: "compress ration, [0,1], default is 0.475")
+                              helpMessage: "compress ration, [0,1], default is 0.425")
 
 let help = BoolOption(shortFlag: "h", longFlag: "help",
                       helpMessage: "Prints a help message.")
@@ -47,13 +47,13 @@ if help.value {
 var input = inFile.value
 
 if input == nil {
-    input = "/Users/hanxiaoming/Desktop/Result/iOS-cluster-marker.mp4"
+    input = "/Users/hanxiaoming/Desktop/aaaaa/iOS-assist-h5-location.mp4"  // iOS-assist-h5-location
 }
 
 var output = outFile.value
 
 if output == nil {
-    output = "/Users/hanxiaoming/Desktop/Result/aaaa.mp4"
+    output = "/Users/hanxiaoming/Desktop/aaaaa/aaaa.mp4"
 }
 
 var start = startTime.value
@@ -64,7 +64,7 @@ if start == nil {
 var duration = durationTime.value
 
 if duration == nil {
-    duration = 34
+    duration = 10
 }
 
 var width = cropWidth.value
@@ -81,7 +81,7 @@ if height == nil {
 var ratio = compressRatio.value
 
 if ratio == nil {
-    ratio = 0.45
+    ratio = 0.425
 }
 
 

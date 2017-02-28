@@ -48,33 +48,38 @@ class MovieCutter {
         let assetVideoTrack = asset!.tracks(withMediaType: AVMediaTypeVideo).first;
         let assetAudioTrack = asset!.tracks(withMediaType: AVMediaTypeAudio).first;
         
-        
+        let movieLength = self.movieLength()
         var modifiedStart = startTime
+        var modifiedDuration = durationTime
+        
+        if modifiedDuration < 0.0 {
+            modifiedDuration = movieLength
+        }
         
         if modifiedStart < 0.0 {
-            modifiedStart = self.movieLength() - durationTime
+            modifiedStart = movieLength - modifiedDuration
         }
         
         if modifiedStart < 0.0 {
             modifiedStart = 0.0
         }
         
-        var modifiedDuration = durationTime
-        
-        if modifiedDuration < 0.0 {
-            modifiedDuration = self.movieLength()
+        if modifiedStart > movieLength {
+            modifiedStart = movieLength
         }
-        
-        if modifiedStart + modifiedDuration > self.movieLength() {
-            modifiedDuration = self.movieLength() - modifiedStart
+      
+        if modifiedStart + modifiedDuration > movieLength {
+
+            modifiedDuration = movieLength - modifiedStart
         }
 
         let scale = asset!.duration.timescale
         
         let start = CMTimeMakeWithSeconds(modifiedStart, scale)
-        let dutation = CMTimeMakeWithSeconds(modifiedDuration, scale)
-        let timeRange = CMTimeRange(start: start, duration: dutation)
+        let duration = CMTimeMakeWithSeconds(modifiedDuration, scale)
+        let timeRange = CMTimeRange(start: start, duration: duration)
         
+        print("trim time range :\(modifiedStart)-\(modifiedDuration)")
         
         if self.composition == nil {
             self.composition = AVMutableComposition()
@@ -104,10 +109,10 @@ class MovieCutter {
             self.composition!.removeTimeRange(CMTimeRangeMake(kCMTimeZero, start))
             
             // 尾部有剩余
-            if modifiedStart + modifiedDuration < self.movieLength() {
+            if modifiedStart + modifiedDuration < movieLength {
                 
                 let endStart = CMTimeMakeWithSeconds(modifiedDuration, scale)
-                let endDuration = CMTimeMakeWithSeconds((self.movieLength() - modifiedStart - modifiedDuration), scale)
+                let endDuration = CMTimeMakeWithSeconds((movieLength - modifiedStart - modifiedDuration), scale)
                 self.composition!.removeTimeRange(CMTimeRangeMake(endStart, endDuration))
             }
         }
@@ -348,10 +353,11 @@ class MovieCutter {
                     let encodingGroup = DispatchGroup()
                     encodingGroup.enter()
                     
-                    let fps: Double = 15.0
+                    let targetFPS: Float = 15.0
+                    let originFPS = assetVideoTrack!.nominalFrameRate
                     
-                    var i = 0
-                    let frameRate: Double = 60.0 / fps
+                    let frameRate: Int = Int(originFPS / targetFPS)
+                    var idx = 0
                     
                     videoWriterInput.requestMediaDataWhenReady(on: dispatchQueue, using: {
                         
@@ -360,21 +366,26 @@ class MovieCutter {
                             if nextSampleBuffer != nil {
                                 
                                 var count: CMItemCount = 0
+
+                                if frameRate == 0 || idx % frameRate == 0 {
                                 
-                                
-                                let value = Double(i) / frameRate
-                                i = i+1
-                                
-                                if i % Int(frameRate) == 0 {
-                                    
-                                    let newTimeStamp: CMTime = CMTimeMake(Int64(value), Int32(fps))
-                                    
-                                    CMSampleBufferGetSampleTimingInfoArray(nextSampleBuffer!, 0, nil, &count);
+                                    CMSampleBufferGetSampleTimingInfoArray(nextSampleBuffer!, 0, nil, &count)
                                     var info = [CMSampleTimingInfo](repeating: CMSampleTimingInfo(duration: CMTimeMake(0, 0), presentationTimeStamp: CMTimeMake(0, 0), decodeTimeStamp: CMTimeMake(0, 0)), count: count)
-                                    CMSampleBufferGetSampleTimingInfoArray(nextSampleBuffer!, count, &info, &count);
+                                    CMSampleBufferGetSampleTimingInfoArray(nextSampleBuffer!, count, &info, &count)
                                     
                                     for i in 0..<count {
+
+                                        var newTimeStamp = CMTimeMake(0, 1)
                                         
+                                        if idx > 0 {
+                                            
+                                            let newValue = Float64(info[i].presentationTimeStamp.value) / Float64(info[i].presentationTimeStamp.timescale)
+                                            
+                                            newTimeStamp = CMTimeMakeWithSeconds(newValue, 600)
+                                        }
+                                        
+//                                        CMTimeShow(info[i].presentationTimeStamp)
+//                                        CMTimeShow(newTimeStamp)
                                         info[i].decodeTimeStamp = kCMTimeInvalid
                                         info[i].presentationTimeStamp = newTimeStamp
                                     }
@@ -383,10 +394,7 @@ class MovieCutter {
                                     CMSampleBufferCreateCopyWithNewTiming(nil, nextSampleBuffer!, count, &info, &outBuffer)
                                     videoWriterInput.append(outBuffer!)
                                 }
-
-                                // append buffer without change fps
-//                                videoWriterInput.append(nextSampleBuffer!)
-                             
+                                idx = idx+1
                             }
                             else {
                              
