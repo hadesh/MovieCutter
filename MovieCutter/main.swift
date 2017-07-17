@@ -47,13 +47,13 @@ if help.value {
 var input = inFile.value
 
 if input == nil {
-    input = "/Users/hanxiaoming/Desktop/aaaaa/iOS-assist-h5-location.mp4"  // iOS-assist-h5-location
+    input = ""
 }
 
 var output = outFile.value
 
 if output == nil {
-    output = "/Users/hanxiaoming/Desktop/aaaaa/aaaa.mp4"
+    output = ""
 }
 
 var start = startTime.value
@@ -64,7 +64,7 @@ if start == nil {
 var duration = durationTime.value
 
 if duration == nil {
-    duration = 10
+    duration = -1
 }
 
 var width = cropWidth.value

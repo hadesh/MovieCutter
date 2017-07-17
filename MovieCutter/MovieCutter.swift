@@ -230,17 +230,17 @@ class MovieCutter {
         
         print("start exporting...")
         exportSession.exportAsynchronously {
-            print("export done, status \(exportSession.status.rawValue), error \(exportSession.error)")
+            print("export done, status \(exportSession.status.rawValue), error \(String(describing: exportSession.error))")
             switch exportSession.status {
             case .completed:
                 completionHandler(true)
                 print("exported at \(output!)")
             case .failed:
                 completionHandler(false)
-                print("failed \(exportSession.error)")
+                print("failed \(String(describing: exportSession.error))")
             case .cancelled:
                 completionHandler(false)
-                print("cancelled \(exportSession.error)")
+                print("cancelled \(String(describing: exportSession.error))")
                 
             default:
                 completionHandler(false)
